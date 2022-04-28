@@ -1,6 +1,9 @@
 rect {
   fill: steelblue;
 }
+circle {
+  fill: steelblue;
+}
 text {
   font-size: 1.4em;
 }
