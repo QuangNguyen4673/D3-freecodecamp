@@ -4,11 +4,11 @@ const width = +svg.attr("width")
 const height = +svg.attr("height")
 
 const render = (data) => {
-  const xValue = (d) => d.timestamp
-  const yValue = (d) => d.temperature
-  const title = "A Week in San Fransisco"
-  const xAxisLabel = "Time"
-  const yAxisLabel = "Temperature"
+  const xValue = (d) => d.year
+  const yValue = (d) => d.population
+  const title = "World Population"
+  const xAxisLabel = "Year"
+  const yAxisLabel = "Population"
   const margin = { top: 50, right: 30, bottom: 80, left: 100 }
   const innerWidth = width - margin.left - margin.right
   const innerHeight = height - margin.top - margin.bottom
@@ -16,9 +16,10 @@ const render = (data) => {
     .scaleTime()
     .domain(d3.extent(data, xValue))
     .range([0, innerWidth])
+    .nice()
   const yScale = d3
     .scaleLinear()
-    .domain(d3.extent(data, yValue))
+    .domain([0, d3.max(data, yValue)])
     .range([innerHeight, 0])
   const g = svg
     .append("g")
@@ -29,7 +30,12 @@ const render = (data) => {
     .ticks(6)
     .tickSize(-innerHeight)
     .tickPadding(20)
-  const yAxis = d3.axisLeft(yScale).tickSize(-innerWidth).tickPadding(5)
+
+  const yAxis = d3
+    .axisLeft(yScale)
+    .tickSize(-innerWidth)
+    .tickPadding(5)
+    .tickFormat((d) => d3.format(".1s")(d).replace("G", "B"))
   const xAxisG = g.append("g").call(xAxis)
   const yAxisG = g.append("g").call(yAxis)
   //x label
@@ -69,15 +75,22 @@ const render = (data) => {
     )
 
   //Title
-  g.append("text").attr("class", "chart-title").text(title).attr("y", "-10")
+  svg
+    .append("text")
+    .attr("class", "chart-title")
+    .text(title)
+    .attr("y", "35")
+    .attr("x", width / 2)
+    .attr("text-anchor", "middle")
 }
 
 d3.csv(
-  "https://vizhub.com/curran/datasets/temperature-in-san-francisco.csv"
+  "https://vizhub.com/curran/datasets/world-population-by-year-2015.csv"
 ).then((data) => {
   data.forEach((d) => {
-    d.temperature = +d.temperature
-    d.timestamp = new Date(d.timestamp)
+    d.year = new Date(d.year)
+    d.population = +d.population
   })
+  console.log(data)
   render(data)
 })
