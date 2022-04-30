@@ -9,7 +9,6 @@ const render = (data) => {
   const title = "A Week in San Fransisco"
   const xAxisLabel = "Time"
   const yAxisLabel = "Temperature"
-  const circleRadius = 6
   const margin = { top: 50, right: 30, bottom: 80, left: 100 }
   const innerWidth = width - margin.left - margin.right
   const innerHeight = height - margin.top - margin.bottom
@@ -17,17 +16,19 @@ const render = (data) => {
     .scaleTime()
     .domain(d3.extent(data, xValue))
     .range([0, innerWidth])
-    .nice()
   const yScale = d3
     .scaleLinear()
     .domain(d3.extent(data, yValue))
     .range([innerHeight, 0])
-    .nice()
   const g = svg
     .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`)
 
-  const xAxis = d3.axisBottom(xScale).tickSize(-innerHeight).tickPadding(20)
+  const xAxis = d3
+    .axisBottom(xScale)
+    .ticks(6)
+    .tickSize(-innerHeight)
+    .tickPadding(20)
   const yAxis = d3.axisLeft(yScale).tickSize(-innerWidth).tickPadding(5)
   const xAxisG = g.append("g").call(xAxis)
   const yAxisG = g.append("g").call(yAxis)
@@ -56,13 +57,14 @@ const render = (data) => {
   //Main content
   g.append("path")
     .datum(data)
-    .attr("class", "chart-line")
+    .attr("class", "chart-area")
     .attr(
       "d",
       d3
-        .line()
+        .area()
         .x((d) => xScale(xValue(d)))
-        .y((d) => yScale(yValue(d)))
+        .y0(innerHeight)
+        .y1((d) => yScale(yValue(d)))
         .curve(d3.curveBasis)
     )
 
