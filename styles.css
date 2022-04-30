@@ -1,9 +1,20 @@
-rect {
-  fill: steelblue;
+.tick text {
+  font-size: 1.6em;
 }
-circle {
-  fill: steelblue;
+.tick line {
+  opacity: 0.3;
 }
-text {
-  font-size: 1.4em;
+.chart-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+.chart-label {
+  fill: black;
+  font-size: 1.5rem;
+  opacity: 0.5;
+  text-anchor: middle;
+}
+.chart-circle {
+  fill: steelblue;
+  opacity: 0.5;
 }

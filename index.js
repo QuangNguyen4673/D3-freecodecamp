@@ -4,60 +4,76 @@ const width = +svg.attr("width")
 const height = +svg.attr("height")
 
 const render = (data) => {
-  const xValue = (d) => d.population
-  const yValue = (d) => d.country
+  const xValue = (d) => d.horsepower
+  const yValue = (d) => d.weight
+  const title = "Cars: Horsepower vs Weight"
+  const xAxisLabel = "Horsepower"
+  const yAxisLabel = "Weight"
+  const circleRadius = 10
   const margin = { top: 50, right: 30, bottom: 80, left: 100 }
   const innerWidth = width - margin.left - margin.right
   const innerHeight = height - margin.top - margin.bottom
   const xScale = d3
     .scaleLinear()
-    .domain([0, d3.max(data, (d) => d.population)])
+    .domain(d3.extent(data, xValue))
     .range([0, innerWidth])
     .nice()
   const yScale = d3
-    .scalePoint()
-    .domain(data.map((d) => d.country))
+    .scaleLinear()
+    .domain(d3.extent(data, yValue))
     .range([0, innerHeight])
-    .padding(1)
+    .nice()
   const g = svg
     .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`)
 
-  const xAxisTickFormat = (number) => d3.format(".3s")(number).replace("M", "J")
-  const xAxis = d3
-    .axisBottom(xScale)
-    .tickFormat(xAxisTickFormat)
-    .tickSize(-innerHeight)
-  const yAxis = d3.axisLeft(yScale).tickSize(-innerWidth)
-
-  g.append("g").call(yAxis).select(".domain").remove()
-
+  const xAxis = d3.axisBottom(xScale).tickSize(-innerHeight).tickPadding(20)
+  const yAxis = d3.axisLeft(yScale).tickSize(-innerWidth).tickPadding(5)
   const xAxisG = g.append("g").call(xAxis)
+  const yAxisG = g.append("g").call(yAxis)
+  //x label
   xAxisG
     .append("text")
-    .attr("y", 50)
+    .attr("class", "chart-label")
+    .attr("y", 60)
     .attr("x", innerWidth / 2)
-    .attr("fill", "black")
-    .text("Population")
-    .style("font-size", "1.5rem")
+    .text(xAxisLabel)
 
   xAxisG
     .attr("transform", `translate(0,${innerHeight})`)
     .select(".domain")
     .remove()
+
+  yAxisG.select(".domain").remove()
+  //y label
+  yAxisG
+    .append("text")
+    .attr("class", "chart-label")
+    .attr("x", -innerHeight / 2)
+    .attr("y", -60)
+    .text(yAxisLabel)
+    .style("transform", "rotate(-90deg)")
+  //Main content
   g.selectAll("circle")
     .data(data)
     .join("circle")
+    .attr("class", "chart-circle")
     .attr("cx", (d) => xScale(xValue(d)))
     .attr("cy", (d) => yScale(yValue(d)))
-    .attr("fill", "black")
-    .attr("r", "20")
-  g.append("text").text("Top 10 most popular country").attr("y", "-10")
+    .attr("r", circleRadius)
+  //Title
+  g.append("text").attr("class", "chart-title").text(title).attr("y", "-10")
 }
 
-d3.csv("data.csv").then((data) => {
+d3.csv("https://vizhub.com/curran/datasets/auto-mpg.csv").then((data) => {
   data.forEach((d) => {
-    d.population = +d.population
+    d.mpg = +d.mpg
+    d.cylinders = +d.cylinders
+    d.displacement = +d.displacement
+    d.horsepower = +d.horsepower
+    d.weight = +d.weight
+    d.acceleration = +d.acceleration
+    d.year = +d.year
   })
   render(data)
 })
