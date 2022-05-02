@@ -1,0 +1,21 @@
+.tick text {
+  font-size: 1.6em;
+}
+.tick line {
+  opacity: 0.3;
+}
+.chart-title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+.chart-label {
+  fill: black;
+  font-size: 1.5rem;
+  opacity: 0.5;
+  text-anchor: middle;
+}
+.chart-area {
+  stroke: steelblue;
+  fill: maroon;
+  stroke-width: 1;
+}
