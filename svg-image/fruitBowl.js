@@ -9,6 +9,17 @@ export const fruitBowl = (selection, { fruits }) => {
     .domain(["apple", "lemon"])
     .range(["50", "30"])
 
+  const bowl = selection
+    .selectAll("rect")
+    .data([null])
+    .enter()
+    .append("rect")
+    .attr("width", 600)
+    .attr("height", 250)
+    .attr("fill", "blue")
+    .attr("y", 180)
+    .attr("rx", 250 / 2)
+
   const groups = selection.selectAll("g").data(fruits, (d) => d.id)
   const groupEnter = groups.enter().append("g")
 
