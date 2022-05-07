@@ -8,14 +8,18 @@ const makeFruit = (type) => ({
 let fruits = range(5).map(() => makeFruit("apple"))
 
 let selectedFruit = null
-
-const onClick = (id) => {
+let setSelectedFruit = (id) => {
   selectedFruit = id
   render()
 }
 
+const onClick = (id) => {
+  setSelectedFruit(id)
+  render()
+}
+
 const render = () => {
-  fruitBowl(svg, { fruits, onClick, selectedFruit })
+  fruitBowl(svg, { fruits, setSelectedFruit, selectedFruit })
 }
 
 setTimeout(() => {

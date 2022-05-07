@@ -1,4 +1,7 @@
-export const fruitBowl = (selection, { fruits, onClick, selectedFruit }) => {
+export const fruitBowl = (
+  selection,
+  { fruits, selectedFruit, setSelectedFruit }
+) => {
   const height = +selection.attr("height")
   const colorScale = d3
     .scaleOrdinal()
@@ -30,14 +33,14 @@ export const fruitBowl = (selection, { fruits, onClick, selectedFruit }) => {
   groupEnter
     .append("circle")
     .merge(groups.select("circle"))
-    .on("click", (e, d) => {
-      onClick(d.id)
+    .on("mouseover", (e, d) => {
+      setSelectedFruit(d.id)
     })
+    .on("mouseout", () => setSelectedFruit(null))
     .attr("fill", (d) => colorScale(d.type))
     .attr("r", (d) => sizeScale(d.type))
     .attr("stroke", ({ id }) => (selectedFruit === id ? "black" : "none"))
     .attr("stroke-width", "3")
-  //.attr("stroke-width", ({ i }) => selectedFruit === i && "2")
 
   groupEnter
     .append("text")
