@@ -7,16 +7,26 @@ const makeFruit = (type) => ({
 })
 let fruits = range(5).map(() => makeFruit("apple"))
 
-fruitBowl(svg, { fruits })
+let selectedFruit = null
+
+const onClick = (id) => {
+  selectedFruit = id
+  render()
+}
+
+const render = () => {
+  fruitBowl(svg, { fruits, onClick, selectedFruit })
+}
+
 setTimeout(() => {
   fruits.pop()
-  fruitBowl(svg, { fruits })
+  render()
 }, 1000)
 setTimeout(() => {
   fruits[2].type = "lemon"
-  fruitBowl(svg, { fruits })
+  render()
 }, 2000)
 setTimeout(() => {
   fruits = fruits.filter((fruit, index) => index !== 1)
-  fruitBowl(svg, { fruits })
+  render()
 }, 3000)

@@ -1,4 +1,4 @@
-export const fruitBowl = (selection, { fruits }) => {
+export const fruitBowl = (selection, { fruits, onClick, selectedFruit }) => {
   const height = +selection.attr("height")
   const colorScale = d3
     .scaleOrdinal()
@@ -9,16 +9,15 @@ export const fruitBowl = (selection, { fruits }) => {
     .domain(["apple", "lemon"])
     .range(["50", "30"])
 
-  const bowl = selection
+  /*   const bowl = selection
     .selectAll("rect")
     .data([null])
     .enter()
     .append("rect")
     .attr("width", 600)
     .attr("height", 250)
-    .attr("fill", "blue")
     .attr("y", 180)
-    .attr("rx", 250 / 2)
+    .attr("rx", 250 / 2) */
 
   const groups = selection.selectAll("g").data(fruits, (d) => d.id)
   const groupEnter = groups.enter().append("g")
@@ -31,8 +30,14 @@ export const fruitBowl = (selection, { fruits }) => {
   groupEnter
     .append("circle")
     .merge(groups.select("circle"))
+    .on("click", (e, d) => {
+      onClick(d.id)
+    })
     .attr("fill", (d) => colorScale(d.type))
     .attr("r", (d) => sizeScale(d.type))
+    .attr("stroke", ({ id }) => (selectedFruit === id ? "black" : "none"))
+    .attr("stroke-width", "3")
+  //.attr("stroke-width", ({ i }) => selectedFruit === i && "2")
 
   groupEnter
     .append("text")
